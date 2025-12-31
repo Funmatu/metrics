@@ -16,7 +16,7 @@ RUN chmod +x /metrics/source/app/action/index.mjs \
   && apt-get update \
   && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 libx11-xcb1 libxtst6 lsb-release --no-install-recommends \
   # Install deno for miscellaneous scripts
-  && apt-get install -y curl unzip \
+  && apt-get install -y curl unzip xz-utils \
   && curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/usr/local sh \
   # Install ruby to support github licensed gem
   && apt-get install -y ruby-full git g++ cmake pkg-config libssl-dev \
