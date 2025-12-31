@@ -54,20 +54,20 @@ export default async function({list, login, data, computed, imports, graphql, qu
   }
 
   //Manager
-  {
-    const value = user.projects.totalCount
-    const unlock = user.projects.nodes?.shift()
-
-    list.push({
-      title: "Manager",
-      text: `Created ${value} user project${imports.s(value)}`,
-      icon:
-        '<g stroke-width="2" fill="none" fill-rule="evenodd"><path d="M29 16V8.867C29 7.705 29.627 7 30.692 7h18.616C50.373 7 51 7.705 51 8.867v38.266C51 48.295 50.373 49 49.308 49H30.692C29.627 49 29 48.295 29 47.133V39m-4-23V9c0-1.253-.737-2-2-2H7c-1.263 0-2 .747-2 2v34c0 1.253.737 2 2 2h16c1.263 0 2-.747 2-2v-4" stroke="#secondary" stroke-linecap="round"/><path stroke="#secondary" d="M51.557 12.005h-22M5 12.005h21"/><path d="M14 33V22c0-1.246.649-2 1.73-2h28.54c1.081 0 1.73.754 1.73 2v11c0 1.246-.649 2-1.73 2H15.73c-1.081 0-1.73-.754-1.73-2z" stroke="#primary" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 29v-3c0-.508.492-1 1-1h3c.508 0 1 .492 1 1v3c0 .508-.492 1-1 1h-3c-.508-.082-1-.492-1-1z" stroke="#primary"/><path stroke="#primary" stroke-linecap="round" stroke-linejoin="round" d="M28.996 27.998h12M9.065 20.04a7.062 7.062 0 00-.023 1.728m.775 2.517c.264.495.584.954.954 1.369"/></g>',
-      ...rank(value, [1, 2, 3, 4, 5]),
-      value,
-      unlock: new Date(unlock?.createdAt),
-    })
-  }
+  //{
+  //     co st va =  = u.er.proje.ts.totalCo
+  //     co st unl =  = u.er.proje.ts.no?.s?.shif
+  //
+  //     l.st.pus
+  //    title: e: "Manag,
+  //    text: t: `Created ${value} user project${impo.ts.s(value,
+  //    icon:
+  //         '<g stroke-width="2" fill="none" fill-rule="evenodd"><path d="M29 16V8.867C29 7.705 29.627 7 30.692 7h18.616C50.373 7 51 7.705 51 8.867v38.266C51 48.295 50.373 49 49.308 49H30.692C29.627 49 29 48.295 29 47.133V39m-4-23V9c0-1.253-.737-2-2-2H7c-1.263 0-2 .747-2 2v34c0 1.253.737 2 2 2h16c1.263 0 2-.747 2-2v-4" stroke="#secondary" stroke-linecap="round"/><path stroke="#secondary" d="M51.557 12.005h-22M5 12.005h21"/><path d="M14 33V22c0-1.246.649-2 1.73-2h28.54c1.081 0 1.73.754 1.73 2v11c0 1.246-.649 2-1.73 2H15.73c-1.081 0-1.73-.754-1.73-2z" stroke="#primary" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 29v-3c0-.508.492-1 1-1h3c.508 0 1 .492 1 1v3c0 .508-.492 1-1 1h-3c-.508-.082-1-.492-1-1z" stroke="#primary"/><path stroke="#primary" stroke-linecap="round" stroke-linejoin="round" d="M28.996 27.998h12M9.065 20.04a7.062 7.062 0 00-.023 1.728m.775 2.517c.264.495.584.954.954 1.369"/></,
+  //    ...rankank(va, e,, 1, 2, 3, 4, ,
+  //    value,
+  //    unlock: k:  ew Date(unl?.k?.created,
+  //    
+  //}
 
   //Reviewer
   {
