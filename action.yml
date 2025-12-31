@@ -1577,8 +1577,17 @@ runs:
           fi
         # Forked action
         else
-          echo "Using a forked version"
-          METRICS_IMAGE=metrics:forked-$METRICS_VERSION
+          echo "Using a forked version (Funmatu)"
+          # ▼ フォークリポジトリのイメージを指定
+          METRICS_IMAGE=ghcr.io/funmatu/metrics:master
+          
+          echo "Attempting to pull docker image: $METRICS_IMAGE"
+          # ▼ イメージのPullを試みる
+          if ! docker image pull $METRICS_IMAGE; then
+            echo "Failed to fetch docker image, will rebuild it locally"
+            # Pullに失敗したら、ローカルビルド用の名前に戻す（＝後の処理でビルドが走る）
+            METRICS_IMAGE=metrics:forked-$METRICS_VERSION
+          fi
         fi
         echo "Image name: $METRICS_IMAGE"
 
