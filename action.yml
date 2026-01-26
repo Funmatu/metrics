@@ -319,7 +319,7 @@ inputs:
 
   plugin_languages_analysis_timeout:
     description: Indepth mode - Analysis timeout
-    default: <default-value>
+    default: "0" # <default-value>
 
   plugin_languages_analysis_timeout_repositories:
     description: Indepth mode - Analysis timeout (repositories)
@@ -1527,9 +1527,21 @@ runs:
 
         # Create environment file from inputs and GitHub variables
         touch .env
-        for INPUT in $(echo $INPUTS | jq -r 'to_entries|map("INPUT_\(.key|ascii_upcase)=\(.value|@uri)")|.[]'); do
-          echo $INPUT >> .env
+        # for INPUT in $(echo $INPUTS | jq -r 'to_entries|map("INPUT_\(.key|ascii_upcase)=\(.value|@uri)")|.[]'); do
+        #   echo $INPUT >> .env
+        # done
+        # 1. 既存の入力値を全て .env に書き出す（jq処理）
+        for INPUT in $(echo $INPUTS | jq -r 'to_entries|map("INPUT_\(.key|ascii_upcase)=\(.value|tostring)")|.[]'); do
+          echo "$INPUT" >> .env
         done
+
+        # 2. タイムアウト値を強制的に書き込む（念には念を入れる処理）
+        # もし jq の処理で落ちていたり、URIエンコードでおかしくなっている場合への対策
+        echo "INPUT_PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT=${{ inputs.plugin_languages_analysis_timeout }}" >> .env
+        
+        # 3. 互換性のため、INPUT_ 接頭辞なしの変数も念のためセットしておく
+        echo "PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT=${{ inputs.plugin_languages_analysis_timeout }}" >> .env
+        
         env | grep -E '^(GITHUB|ACTIONS|CI|TZ)' >> .env
         echo "Environment variables: loaded"
 
@@ -1541,6 +1553,11 @@ runs:
         # Source repository (picked from action name)
         METRICS_SOURCE=$(echo $METRICS_ACTION | sed -E 's/metrics.*?$//g' | sed -E 's/_//g')
         echo "Source: $METRICS_SOURCE"
+
+        # --- デバッグ用: 実際にセットされたタイムアウト値をログに出す ---
+        echo "🔍 DEBUG: Timeout Value Check"
+        grep "ANALYSIS_TIMEOUT" .env || echo "⚠️ Warning: Timeout variable not found in .env"
+        # -------------------------------------------------------
 
         # Version (picked from package.json)
         METRICS_VERSION=$(grep -Po '(?<="version": ").*(?=")' package.json)
