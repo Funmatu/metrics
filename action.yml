@@ -1530,23 +1530,25 @@ runs:
         # for INPUT in $(echo $INPUTS | jq -r 'to_entries|map("INPUT_\(.key|ascii_upcase)=\(.value|@uri)")|.[]'); do
         #   echo $INPUT >> .env
         # done
-        # 1. 既存の入力値を全て .env に書き出す（jq処理）
+        # 1. 自動入力変換 (jq)
         for INPUT in $(echo $INPUTS | jq -r 'to_entries|map("INPUT_\(.key|ascii_upcase)=\(.value|tostring)")|.[]'); do
           echo "$INPUT" >> .env
         done
 
-        # 2. タイムアウト値を強制的に書き込む（念には念を入れる処理）
-        # もし jq の処理で落ちていたり、URIエンコードでおかしくなっている場合への対策
-        echo "INPUT_PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT=${{ inputs.plugin_languages_analysis_timeout }}" >> .env
-        
-        # 3. 互換性のため、INPUT_ 接頭辞なしの変数も念のためセットしておく
-        echo "PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT=${{ inputs.plugin_languages_analysis_timeout }}" >> .env
-
-        # リポジトリごとのタイムアウト設定も強制的に .env に書き込む
+        # 2. 【最重要】リポジトリごとのタイムアウトを強制的に注入
+        # INPUT_ プレフィックス付きと、なしの両方を入れる
         echo "INPUT_PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT_REPOSITORIES=${{ inputs.plugin_languages_analysis_timeout_repositories }}" >> .env
         echo "PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT_REPOSITORIES=${{ inputs.plugin_languages_analysis_timeout_repositories }}" >> .env
         
+        # 3. 標準環境変数の追加
         env | grep -E '^(GITHUB|ACTIONS|CI|TZ)' >> .env
+
+        # 4. 【デバッグ用】本当に書き込まれたかログに出す（これが重要です）
+        echo "🔍 DEBUG: Checking .env content for REPOSITORIES timeout..."
+        grep "REPOSITORIES" .env || echo "❌ ERROR: Variable missing in .env!"
+        
+        # ▲▲▲ 修正箇所：ここまで ▲▲▲
+
         echo "Environment variables: loaded"
 
         # Renders output folder
