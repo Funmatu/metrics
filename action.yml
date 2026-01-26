@@ -1541,6 +1541,10 @@ runs:
         
         # 3. 互換性のため、INPUT_ 接頭辞なしの変数も念のためセットしておく
         echo "PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT=${{ inputs.plugin_languages_analysis_timeout }}" >> .env
+
+        # リポジトリごとのタイムアウト設定も強制的に .env に書き込む
+        echo "INPUT_PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT_REPOSITORIES=${{ inputs.plugin_languages_analysis_timeout_repositories }}" >> .env
+        echo "PLUGIN_LANGUAGES_ANALYSIS_TIMEOUT_REPOSITORIES=${{ inputs.plugin_languages_analysis_timeout_repositories }}" >> .env
         
         env | grep -E '^(GITHUB|ACTIONS|CI|TZ)' >> .env
         echo "Environment variables: loaded"
