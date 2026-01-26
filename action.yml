@@ -319,11 +319,11 @@ inputs:
 
   plugin_languages_analysis_timeout:
     description: Indepth mode - Analysis timeout
-    default: <default-value>
+    default: "120" # <default-value>
 
   plugin_languages_analysis_timeout_repositories:
     description: Indepth mode - Analysis timeout (repositories)
-    default: <default-value>
+    default: "120" # <default-value>
 
   plugin_languages_categories:
     description: Indepth mode - Displayed categories (most-used section)
