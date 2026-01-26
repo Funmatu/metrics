@@ -220,7 +220,7 @@ inputs:
   use_prebuilt_image:
     description: >-
       Use pre-built docker image from [GitHub container
-      registry](https://github.com/lowlighter/metrics/pkgs/container/metrics)
+      registry](https://github.com/Funmatu/metrics/pkgs/container/metrics)
     default: yes
 
   plugins_errors_fatal:
@@ -319,11 +319,11 @@ inputs:
 
   plugin_languages_analysis_timeout:
     description: Indepth mode - Analysis timeout
-    default: "120" # <default-value>
+    default: "180" # <default-value>
 
   plugin_languages_analysis_timeout_repositories:
     description: Indepth mode - Analysis timeout (repositories)
-    default: "120" # <default-value>
+    default: "180" # <default-value>
 
   plugin_languages_categories:
     description: Indepth mode - Displayed categories (most-used section)
