@@ -146,7 +146,6 @@ inputs:
     type: number
     default: 15
     min: 1
-    max: 60
 
   plugin_languages_analysis_timeout_repositories:
     description: |
@@ -154,7 +153,6 @@ inputs:
     type: number
     default: 7.5
     min: 0
-    max: 15
     zero: disable
 
   plugin_languages_categories:
