@@ -46,7 +46,7 @@ export default async function({login, data, rest, imports, q, account}, {enabled
     else {
       //Commit Search API path: up to 1000 commits with exact timestamps, covering weeks/months
       console.debug(`metrics/compute/${login}/plugins > habits > querying commit search api (from=${from})`)
-      const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+      const [since] = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split("T")
       const searchPages = Math.min(Math.ceil(from / 100), 10)
       const rawCommits = []
       try {
@@ -96,7 +96,7 @@ export default async function({login, data, rest, imports, q, account}, {enabled
     const patches = [
       ...await Promise.allSettled(
         commits
-          .flatMap(({payload}) => payload.commits ?? []) // ← 【修正点】 ?? [] を追加
+          .flatMap(({payload}) => payload.commits ?? [])
           .filter(({author}) => data.shared["commits.authoring"].filter(authoring => author?.login?.toLocaleLowerCase().includes(authoring) || author?.email?.toLocaleLowerCase().includes(authoring) || author?.name?.toLocaleLowerCase().includes(authoring)).length)
           .map(async commit => (await rest.request(commit)).data.files),
       ),
