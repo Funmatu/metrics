@@ -150,11 +150,12 @@ export default async function({login, graphql, rest, data, q, queries, imports, 
         data.user[type] = data.user[type] ?? {}
         data.user[type].nodes = data.user[type].nodes ?? []
         const maxAttempts = 5
-        // Bounded-retry pagination loop. Replaces a buggy do-while where (1) the catch path's `continue`
-        // fell through to a while-condition that was still falsy on first failure (so retries never ran),
-        // and (2) the page-end check compared `pushed` against the total cap `repositories` instead of
-        // the per-page size, causing pagination to stop after a single page.
-        outer: while (true) {
+        //Bounded-retry pagination loop. Replaces a buggy do-while where (1) the catch path's `continue`
+        //fell through to a while-condition that was still falsy on first failure (so retries never ran),
+        //and (2) the page-end check compared `pushed` against the total cap `repositories` instead of
+        //the per-page size, causing pagination to stop after a single page.
+        let _paginating = true
+        outer: while (_paginating) {
           //Page size = min(total cap, per-account batch ceiling). Used both for the GraphQL request and as the "no more pages" threshold.
           const pageSize = Math.min(repositories, {user: _batch, organization: Math.min(25, _batch)}[account])
           console.debug(`metrics/compute/${login}/base > retrieving ${type} after ${cursor} (batch=${_batch}, pageSize=${pageSize})`)
@@ -182,7 +183,7 @@ export default async function({login, graphql, rest, data, q, queries, imports, 
                 }
                 throw error
               }
-              const delay = Math.min(16000, 2000 * Math.pow(2, attempt - 1)) + Math.floor(Math.random() * 1000)
+              const delay = Math.min(16000, 2000 * 2 ** (attempt - 1)) + Math.floor(Math.random() * 1000)
               await new Promise(resolve => setTimeout(resolve, delay))
             }
           }

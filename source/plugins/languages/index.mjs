@@ -105,53 +105,50 @@ export default async function({login, data, imports, q, rest, account}, {enabled
     }
 
     //Compute languages stats
-    // 修正: ループ内のロジックを「行数基準」に書き換え
-    for (const {section, stats = {}, lines = {}, missed = {bytes: 0, lines: 0}, total = 0} of [{section: "favorites", stats: languages.stats, lines: languages.lines, total: languages.total, missed: languages.missed}, {section: "recent", ...languages["stats.recent"]}]) {
+    for (const {section, stats = {}, lines = {}, missed = {bytes: 0, lines: 0}} of [{section: "favorites", stats: languages.stats, lines: languages.lines, total: languages.total, missed: languages.missed}, {section: "recent", ...languages["stats.recent"]}]) {
       console.debug(`metrics/compute/${login}/plugins > languages > formatting stats ${section}`)
-      
-      // 1. 全行数を計算（パーセンテージの分母用）
+      //Total line count used as percentage denominator
       const totalLines = Object.values(lines).reduce((a, b) => a + b, 0) || 1
 
       languages[section] = Object.entries(stats)
         .filter(([name]) => imports.filters.text(name, ignored))
-        .sort(([_an], [_bn]) => (lines[_bn] || 0) - (lines[_an] || 0)) // 2. 行数でソート
+        .sort(([_an], [_bn]) => (lines[_bn] || 0) - (lines[_an] || 0))
         .slice(0, limit)
         .map(([name, byteSize]) => ({
-            name, 
-            value: lines[name] || 0, // 3. グラフの値を「行数」に変更
-            size: byteSize,          // バイト数は表示用にsizeとして保持
-            color: languages.colors[name], 
+            name,
+            value: lines[name] || 0,
+            size: byteSize,
+            color: languages.colors[name],
             x: 0
         }))
-        .filter(({value}) => value / totalLines > threshold) // 4. 足切りも行数ベースで判定
+        .filter(({value}) => value / totalLines > threshold) //4. 足切りも行数ベースで判定
 
-      // 5. "Other"（その他）カテゴリの計算も行数ベースに変更
+      //5. "Other"（その他）カテゴリの計算も行数ベースに変更
       if (other) {
-        // indepthモードなら解析できなかった行数、そうでなければリストに含まれない言語の行数を合計
+        //indepthモードなら解析できなかった行数、そうでなければリストに含まれない言語の行数を合計
         let value = indepth ? (missed.lines || 0) : Object.entries(lines).filter(([name]) => !Object.values(languages[section]).map(({name}) => name).includes(name)).reduce((a, [_, b]) => a + b, 0)
-        
-        // limit制限でリストから溢れた言語があれば、その行数をOtherに足す
+
+        //limit制限でリストから溢れた言語があれば、その行数をOtherに足す
         if (languages[section].length === limit) {
             const popped = languages[section].pop()
             value += popped.value
         }
-        
+
         if (value) {
-          //dprint-ignore-next-line
-          languages[section].push({name:"Other", value, size: value, get lines() { return value }, set lines(_) { }, x:0}) 
+          languages[section].push({name: "Other", value, size: value, lines: value, x: 0})
         }
       }
 
-      // 6. 表示用合計値（グラフの100%幅）を行数の合計で計算
+      //6. 表示用合計値（グラフの100%幅）を行数の合計で計算
       const visible = {total: Object.values(languages[section]).map(({value}) => value).reduce((a, b) => a + b, 0)}
 
       for (let i = 0; i < languages[section].length; i++) {
         const {name} = languages[section][i]
-        // 7. 各言語の割合を行数ベースで計算
+        //7. 各言語の割合を行数ベースで計算
         languages[section][i].value /= (visible.total || 1)
         languages[section][i].x = (languages[section][i - 1]?.x ?? 0) + (languages[section][i - 1]?.value ?? 0)
         languages[section][i].lines = lines[name] ?? 0
-        
+
         if ((colors[i]) && (!colors[name.toLocaleLowerCase()]))
           languages[section][i].color = colors[i]
         else
