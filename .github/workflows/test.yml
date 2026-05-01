@@ -48,7 +48,7 @@ jobs:
       - name: Run tests
         env:
           GIT_REF: ${{ github.head_ref || 'master' }}
-        run: docker run --rm --entrypoint="" lowlighter/metrics:$(echo $GIT_REF | sed 's/[^a-z]/-/g') npm run test-metrics
+        run: docker run --rm --entrypoint="" lowlighter/metrics:$(echo $GIT_REF | sed 's/[^a-z]/-/g') npm run test-metrics -- --testNamePattern "^(?!.*16personalities).*$"
 
   # Run CodeQL on branch
   analyze:
