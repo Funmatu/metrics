@@ -50,6 +50,8 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm run test-metrics -- --testNamePattern "(Base content|Coding habits|Follow-up|Languages activity|Achievements|Classic template)"
+      - name: Run languages analyzer regression tests
+        run: npm run test-linguist
 
   # Run CodeQL on branch
   analyze:

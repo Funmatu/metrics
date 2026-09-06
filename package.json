@@ -10,6 +10,7 @@
     "test-contrib": "jest --runInBand ci.test.js --noStackTrace",
     "test-presets": "jest --runInBand presets.test.js --noStackTrace",
     "test-metrics": "jest --runInBand metrics.test.js",
+    "test-linguist": "jest --runInBand linguist.test.js",
     "build": "node .github/scripts/build.mjs",
     "presets": "node .github/scripts/presets_examples.mjs",
     "quickstart": "node .github/scripts/quickstart/index.mjs",
@@ -83,6 +84,12 @@
     "testEnvironment": "node",
     "testTimeout": 60000,
     "transform": {}
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "overrides": {
+    "isbinaryfile": "6.0.0"
   },
   "optionalDependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.38",

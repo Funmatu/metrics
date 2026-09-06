@@ -27,7 +27,10 @@ RUN chmod +x /metrics/source/app/action/index.mjs \
   && rm -rf /var/lib/apt/lists/* \
   # Install node modules and rebuild indexes
   && npm ci \
-  && npm run build
+  && npm run build \
+  # Verify inside the shipped image that linguist does not abort the process on files that taste
+  # like protobuf (needs node >= 20.19 to load the ESM-only isbinaryfile from linguist-js)
+  && npm run test-linguist
 
 # Environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
