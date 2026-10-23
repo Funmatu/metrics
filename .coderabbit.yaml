@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit は依頼されたときだけレビューする (PR の作成時と push ごとの自動レビューを止める)。
+# 依頼の方法: コードの差分が 1,000 行以上か、4 モジュール以上にまたがる PR では、PR を作った後に
+#   `@coderabbitai review` だけの 1 行をコメントする。それより小さい PR は依頼しない (Codex が自動でレビューする)。
+# 数え方: 追加 + 削除の行数。文書 (.md / .txt / .rst) とデータ・生成物 (画像・csv・pdf・notebook・lock ファイルなど)
+#   は数えない。モジュールは最上位のディレクトリの数。
+# 理由: CodeRabbit (Essentials) の上限は PR の作成者ごとで、直近のレビュー数が多いほど 1 時間の補充が下がる。
+#   このファイルが無いリポジトリでは、小さい PR にも自動レビューが走り、上限を無駄に使っていた (2026-10-23)。
+#
+# inheritance: 言語やレビューの profile などの他の設定は、CodeRabbit の組織の設定から引き継ぐ
+# (これが無いと、このファイルが唯一の設定になり、既定値に戻る)。
+inheritance: true
+reviews:
+  auto_review:
+    enabled: false
+    auto_incremental_review: false
